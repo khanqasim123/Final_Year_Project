@@ -14,7 +14,6 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       transition: transform 0.3s ease;
       max-width: 100%;
-      margin-left: -40%;
     }
     .card:hover {
       transform: translateY(-5px);
@@ -27,50 +26,17 @@
     .card-text {
       color: #666;
     }
-
-    
   </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <div class="row" id="existingCardContainer">
-          <!-- The initial card -->
-          <div class="col-12 col-md-6 col-lg-4">
-            <div class="card">
-              <div class="card-body">
-                <input type="text" class="card-title mb-2" placeholder="Class 1">
-                <p class="card-text">Add image samples.</p>
-                <div>
-                  <button class="btn btn-primary" onclick="startWebcam(this)">Start Webcam</button>
-                  <label class="btn btn-secondary">
-                    Upload <input type="file" style="display: none;" accept="image/*" onchange="handleUpload(this)">
-                  </label>
-                </div>
-                <div class="webcam-container"></div>
-              </div>
-            </div>
-          </div>
-      </div>
-    </div>
-<div class="text-center mt-4">
-    <button id="addCardButton" class="btn btn-primary"  >Add New Class</button>
-  </div>
-  <div id="newCardContainer"></div>
-  </div>
-
-<script>
-    const existingCardContainer = document.getElementById('existingCardContainer');
-    const newCardContainer = document.getElementById('newCardContainer');   
-    const addCardButton = document.getElementById('addCardButton');
-  
-    let cardCount = 1;
-  
-    addCardButton.addEventListener('click', () => {
-      const newCard = `
-          <div class="col-12 col-md-6 col-lg-4">
-            <div class="card" style="margin-left: 40%; margin-bottom: 5%;">
-              <div class="card-body" >
-              <input type="text" class="card-title mb-2" placeholder="Class ${cardCount + 1}">
+  <div class="container mt-5">
+    <div id="cardContainer">
+      <!-- The initial card -->
+      <div class="row">
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="card">
+            <div class="card-body">
+              <input type="text" class="card-title mb-2" placeholder="Class 1">
               <p class="card-text">Add image samples.</p>
               <div>
                 <button class="btn btn-primary" onclick="startWebcam(this)">Start Webcam</button>
@@ -80,22 +46,61 @@
               </div>
               <div class="webcam-container"></div>
             </div>
-          <!-- You can add more cards here within the same row -->
+          </div>
+          <div class="text-center mt-4">
+            <button class="btn btn-primary add-card-button">Add New Card</button>
+          </div>
         </div>
-      `;
-  // Create a new DOM element from the newCard string
-      const newCardElement = document.createRange().createContextualFragment(newCard);
+      </div>
+    </div>
+  </div>
 
-     
-      // Append the new row of cards below the existing rows
-      newCardContainer.appendChild(newCardElement);
-      cardCount++;
-    });
-  
+<script>
+const cardContainer = document.getElementById('cardContainer');
+
+// Function to create a new card and "Add New Card" button
+function createCard() {
+  const newCard = `
+    <div class="row">
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card">
+          <div class="card-body">
+            <input type="text" class="card-title mb-2" placeholder="Class">
+            <p class="card-text">Add image samples.</p>
+            <div>
+              <button class="btn btn-primary" onclick="startWebcam(this)">Start Webcam</button>
+              <label class="btn btn-secondary">
+                Upload <input type="file" style="display: none;" accept="image/*" onchange="handleUpload(this)">
+              </label>
+            </div>
+            <div class="webcam-container"></div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  `;
+
+ // Create a new DOM element from the newCard string
+ const newCardElement = document.createRange().createContextualFragment(newCard);
+
+// Insert the new card element before the existing "Add New Card" button
+cardContainer.insertBefore(newCardElement, cardContainer.firstElementChild);
+
+// Add an event listener to the new "Add New Card" button
+const newAddCardButton = newCardElement.querySelector('.add-card-button');
+newAddCardButton.addEventListener('click', createCard);
+}
+
+// Add an event listener to the initial "Add New Card" button
+const addCardButton = document.querySelector('.add-card-button');
+addCardButton.addEventListener('click', createCard);
+
+
     function startWebcam(button) {
       const cardBody = button.closest('.card-body');
       const webcamContainer = cardBody.querySelector('.webcam-container');
-      
+
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({ video: true })
           .then(stream => {
@@ -112,7 +117,7 @@
         console.error('getUserMedia is not supported in this browser.');
       }
     }
-  
+
     function handleUpload(input) {
       const cardBody = input.closest('.card-body');
       const uploadedImage = document.createElement('img');
@@ -122,6 +127,5 @@
       cardBody.appendChild(uploadedImage);
     }
   </script>
-  
 </body>
 </html>
