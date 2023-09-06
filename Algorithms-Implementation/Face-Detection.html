@@ -14,6 +14,7 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       transition: transform 0.3s ease;
       max-width: 100%;
+      margin-left: -40%;
     }
     .card:hover {
       transform: translateY(-5px);
@@ -26,11 +27,13 @@
     .card-text {
       color: #666;
     }
+
+    
   </style>
 </head>
 <body>
     <div class="container mt-5">
-        <div class="row" id="cardContainer">
+        <div class="row" id="existingCardContainer">
           <!-- The initial card -->
           <div class="col-12 col-md-6 col-lg-4">
             <div class="card">
@@ -47,24 +50,26 @@
               </div>
             </div>
           </div>
-        </div>
-        <div class="text-center mt-4">
-          <button id="addCardButton" class="btn btn-primary">Add New Class</button>
-        </div>
       </div>
-
+    </div>
+<div class="text-center mt-4">
+    <button id="addCardButton" class="btn btn-primary"  >Add New Class</button>
+  </div>
+  <div id="newCardContainer"></div>
+  </div>
 
 <script>
-    const cardContainer = document.getElementById('cardContainer');
+    const existingCardContainer = document.getElementById('existingCardContainer');
+    const newCardContainer = document.getElementById('newCardContainer');   
     const addCardButton = document.getElementById('addCardButton');
   
     let cardCount = 1;
   
     addCardButton.addEventListener('click', () => {
       const newCard = `
-        <div class="col-12 col-md-6 col-lg-4">
-          <div class="card">
-            <div class="card-body">
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="card" style="margin-left: 40%; margin-bottom: 5%;">
+              <div class="card-body" >
               <input type="text" class="card-title mb-2" placeholder="Class ${cardCount + 1}">
               <p class="card-text">Add image samples.</p>
               <div>
@@ -75,15 +80,15 @@
               </div>
               <div class="webcam-container"></div>
             </div>
-          </div>
+          <!-- You can add more cards here within the same row -->
         </div>
       `;
-  
-      // Create a new DOM element from the newCard string
+  // Create a new DOM element from the newCard string
       const newCardElement = document.createRange().createContextualFragment(newCard);
-  
-      // Append the new card element to the card container
-      cardContainer.appendChild(newCardElement);
+
+     
+      // Append the new row of cards below the existing rows
+      newCardContainer.appendChild(newCardElement);
       cardCount++;
     });
   
